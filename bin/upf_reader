@@ -1,0 +1,17 @@
+#! /usr/bin/python3
+
+import tkinter
+import argparse
+
+if __name__ == "__main__":
+    tclsh = tkinter.Tcl()
+    
+    # Add the parser TCL
+    tclsh.eval("source {lib/upf_commands.tcl}")
+
+    # read UPF files
+    f = open("examples/upf01.upf","r")
+    lines = f.readlines()
+    lines = "".join(lines)
+    print(lines)
+    tclsh.eval(lines)
