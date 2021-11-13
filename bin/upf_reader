@@ -7,7 +7,7 @@ if __name__ == "__main__":
     tclsh = tkinter.Tcl()
     
     # Add the parser TCL
-    tclsh.eval("source {lib/upf_commands.tcl}")
+    tclsh.eval("source {tcl/upf_commands.tcl}")
 
     # read UPF files
     f = open("examples/upf01.upf","r")
@@ -15,3 +15,13 @@ if __name__ == "__main__":
     lines = "".join(lines)
     print(lines)
     tclsh.eval(lines)
+
+    # Global TCL variables
+    tclsh.call("set", "::" + "x", "100")
+    x=  tclsh.call("set", "::" + "x")
+    print(x)
+
+    c= tclsh.call("set", "::" + "command_name")
+    print(c)
+    c= tclsh.call("set", "::" + "command_args")
+    print("=====", c)

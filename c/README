@@ -1,0 +1,12 @@
+> swig -tcl8 example.i
+Generating wrappers for Tcl 8.x
+> gcc -fpic -c example_wrap.c 
+> gcc -shared example_wrap.o -o example.so -lm 
+> tclsh
+% load ./example.so example
+% pow 2 3
+8.0
+%
+
+
+gcc -fpic -c example_wrap.c -I /usr/include/tcl8.6/

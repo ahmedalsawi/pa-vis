@@ -1,2 +1,9 @@
 connect_supply_net v09 -ports {VDD U18/v9 U21/v9}
-create_power_domain PD1 -elements {top/U1}
+
+create_power_domain PD1 \
+-elements {top/U1 top/U2} -include_scope
+
+create_power_domain PD2  -scope top/U1
+
+set_scope /top/U1
+create_power_domain PD3
