@@ -1,4 +1,3 @@
-# load c/cimpl.so cimpl
 
 # Globals passed to python
 set command_name "TMP"
@@ -27,6 +26,11 @@ proc create_power_domain args {
         append result $x
     }
     set command_args $result
+
+    set chan [socket localhost 65432]
+    fconfigure stdout -buffering line
+    puts $chan $command_name
+    flush $chan
 }
 
 proc connect_supply_net args {
