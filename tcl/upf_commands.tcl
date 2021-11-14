@@ -6,16 +6,8 @@ set command_args ""
 # Handle unsupport commands
 rename unknown _unknown;
 proc unknown {args} {
-    puts stderr "Unknown Command: $args"
-    # pass the args to original error handler
-    #uplevel 1 [list _unknown {*}$args]
-}
-
-
-
-proc create_power_domain args {
-    puts [llength $args]
-
+    # puts stderr "Unknown Command: $args"
+    # puts [llength $args]
     global command_name
     global command_args
 
@@ -29,12 +21,20 @@ proc create_power_domain args {
 
     set chan [socket localhost 65432]
     fconfigure stdout -buffering line
-    puts $chan $command_name
+    puts $chan $args
     flush $chan
+    close $chan
+    # pass the args to original error handler
+    #uplevel 1 [list _unknown {*}$args]
 }
 
-proc connect_supply_net args {
-}
 
-proc set_scope args {
-}
+
+# proc create_power_domain args {
+# }
+
+# proc connect_supply_net args {
+# }
+
+# proc set_scope args {
+# }

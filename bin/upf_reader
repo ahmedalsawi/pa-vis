@@ -2,26 +2,48 @@
 
 import tkinter
 import argparse
+import socket
+import threading
+import queue
+
+HOST = '127.0.0.1'
+PORT = 65432
+
+def ipc_server():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen()
+        while True:
+            conn, addr = s.accept()
+            with conn:
+                command = ""
+                while True:
+                    data = conn.recv(1024).decode('utf-8').strip("\n")
+                    if not data:
+                        break
+                    command += data
+                    print(f"Command {command}")
+
+
+
 
 if __name__ == "__main__":
     tclsh = tkinter.Tcl()
     
-    # Add the parser TCL
+    # CLI 
+    parser = argparse.ArgumentParser(description='UPF Reader')
+    parser.add_argument("-upf", dest="filename", required=True, help="top upf file", metavar="FILE")
+    args = parser.parse_args()
+    
+    # Start IPC server
+    ipc_thread = threading.Thread(target=ipc_server)
+    ipc_thread.start()
+
+    # Load the TCL handler
     tclsh.eval("source {tcl/upf_commands.tcl}")
 
-    # read UPF files
-    f = open("examples/upf01.upf","r")
+    # Read top UPF file
+    f = open(args.filename,"r")
     lines = f.readlines()
     lines = "".join(lines)
-    print(lines)
     tclsh.eval(lines)
-
-    # Global TCL variables
-    tclsh.call("set", "::" + "x", "100")
-    x=  tclsh.call("set", "::" + "x")
-    print(x)
-
-    c= tclsh.call("set", "::" + "command_name")
-    print(c)
-    c= tclsh.call("set", "::" + "command_args")
-    print("=====", c)
