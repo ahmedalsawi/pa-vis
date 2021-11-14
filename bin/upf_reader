@@ -5,6 +5,7 @@ import argparse
 import socket
 import threading
 import queue
+import logging
 
 HOST = '127.0.0.1'
 PORT = 65432
@@ -26,7 +27,6 @@ def ipc_server():
 
 
 
-
 if __name__ == "__main__":
     tclsh = tkinter.Tcl()
     
@@ -35,15 +35,16 @@ if __name__ == "__main__":
     parser.add_argument("-upf", dest="filename", required=True, help="top upf file", metavar="FILE")
     args = parser.parse_args()
     
+    # Load the TCL handler
+    tclsh.eval("source {tcl/upf_commands.tcl}")
+
     # Start IPC server
     ipc_thread = threading.Thread(target=ipc_server)
     ipc_thread.start()
-
-    # Load the TCL handler
-    tclsh.eval("source {tcl/upf_commands.tcl}")
 
     # Read top UPF file
     f = open(args.filename,"r")
     lines = f.readlines()
     lines = "".join(lines)
     tclsh.eval(lines)
+    print('==== Eval DONE')
